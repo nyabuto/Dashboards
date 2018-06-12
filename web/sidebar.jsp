@@ -80,7 +80,7 @@
                        
                     </li>
                     <li>
-                      
+
                 </ul>
             </div><!-- /.navbar-collapse -->
         </nav>
@@ -89,7 +89,6 @@
     <!-- Left Panel -->
 
     <!-- Right Panel -->
-
 
 </body>
 </html>

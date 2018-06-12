@@ -16,6 +16,10 @@
         <servlet-name>register</servlet-name>
         <servlet-class>Db.register</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>Achievements</servlet-name>
+        <servlet-class>Reports.Achievements</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>dbsetup</servlet-name>
         <url-pattern>/dbsetup</url-pattern>
@@ -31,6 +35,10 @@
     <servlet-mapping>
         <servlet-name>register</servlet-name>
         <url-pattern>/register</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>Achievements</servlet-name>
+        <url-pattern>/Achievements</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
