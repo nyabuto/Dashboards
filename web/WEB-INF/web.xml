@@ -20,6 +20,22 @@
         <servlet-name>Achievements</servlet-name>
         <servlet-class>Reports.Achievements</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>load_years</servlet-name>
+        <servlet-class>Loaders.load_years</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>load_semi_annual</servlet-name>
+        <servlet-class>Loaders.load_semi_annual</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>load_quarters</servlet-name>
+        <servlet-class>Loaders.load_quarters</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>load_months</servlet-name>
+        <servlet-class>Loaders.load_months</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>dbsetup</servlet-name>
         <url-pattern>/dbsetup</url-pattern>
@@ -39,6 +55,22 @@
     <servlet-mapping>
         <servlet-name>Achievements</servlet-name>
         <url-pattern>/Achievements</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>load_years</servlet-name>
+        <url-pattern>/load_years</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>load_semi_annual</servlet-name>
+        <url-pattern>/load_semi_annual</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>load_quarters</servlet-name>
+        <url-pattern>/load_quarters</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>load_months</servlet-name>
+        <url-pattern>/load_months</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

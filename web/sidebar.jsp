@@ -59,7 +59,7 @@
                     <li class="menu-item-has-children active dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-table"></i>Reports</a>
                         <ul class="sub-menu children dropdown-menu">
-                            <li><i class="fa fa-table"></i><a href="quarterly_achievements.jsp">Quarterly Achievements</a></li>
+                            <li><i class="fa fa-table"></i><a href="ExcelReport.jsp">Achievements Report</a></li>
                         </ul>
                     </li>
                     <li class="menu-item-has-children active dropdown">
