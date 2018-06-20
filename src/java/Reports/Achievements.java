@@ -273,7 +273,7 @@ String period,semi,quarter,month;
                         
                        }
                        else{
-                           query_where1+="("+conn.rs.getString(1)+".level3='"+conn.rs.getString(2)+"' && "+conn.rs.getString(1)+".level4 IS NULL) OR ";
+                           query_where1+="("+conn.rs.getString(1)+".level3='"+conn.rs.getString(2)+"' && ("+conn.rs.getString(1)+".level4 IS NULL OR "+conn.rs.getString(1)+".level4='')) OR ";
                            table1_elems++;
                         
                        } 
@@ -286,7 +286,7 @@ String period,semi,quarter,month;
                          
                        }
                        else{
-                           query_where2+="("+conn.rs.getString(1)+".level3='"+conn.rs.getString(2)+"' && "+conn.rs.getString(1)+".level4 IS NULL) OR ";
+                           query_where2+="("+conn.rs.getString(1)+".level3='"+conn.rs.getString(2)+"' && ("+conn.rs.getString(1)+".level4 IS NULL OR "+conn.rs.getString(1)+".level4='')) OR ";
                            table2_elems++;
                         
                        } 
@@ -299,7 +299,7 @@ String period,semi,quarter,month;
                           
                        }
                        else{
-                           query_where3+="("+conn.rs.getString(1)+".level3='"+conn.rs.getString(2)+"' && "+conn.rs.getString(1)+".level4 IS NULL) OR ";
+                           query_where3+="("+conn.rs.getString(1)+".level3='"+conn.rs.getString(2)+"' && ("+conn.rs.getString(1)+".level4 IS NULL OR "+conn.rs.getString(1)+".level4='')) OR ";
                            table3_elems++;
                            
                        } 
@@ -395,6 +395,7 @@ String period,semi,quarter,month;
          else{
            final_query =   query;
          }
+            System.out.println("final raw data query : "+final_query);
         //output raw data
          conn.rs = conn.st.executeQuery(final_query);
           ResultSetMetaData metaData = conn.rs.getMetaData();
@@ -583,7 +584,7 @@ shetachievements = (Sheet) obj.get("sheet");
              }
             //
              target = get_targets(county,indic,conn);
-            if(burden_cat.equals("Scale-up")){
+            if(burden_cat.equalsIgnoreCase("Scale-up")){
                 scale_q1+=conn.rs.getInt("q1");
                 scale_q2+=conn.rs.getInt("q2");
                 scale_q3+=conn.rs.getInt("q3");
@@ -828,13 +829,13 @@ shetachievements = (Sheet) obj.get("sheet");
 String table = indicators.get(i).toString().split(",")[0];
 String level3 = indicators.get(i).toString().split(",")[1];
 String level4 = indicators.get(i).toString().split(",")[2];
-         if(level4!=null && !level4.equals("null")){
+         if(level4!=null && !level4.equals("null") && !level4.equals("")){
                            qr+="SELECT yearmonth,quarter FROM "+table+" WHERE ("+table+".level3='"+level3+"' && "+table+".level4='"+level4+"') UNION ALL ";
                            counter++;
                         where_cum+=" (Indicator="+level3+" "+level4+") OR ";
                        }
                        else{
-                           qr+="SELECT yearmonth,quarter FROM "+table+" WHERE ("+table+".level3='"+level3+"' && "+table+".level4 IS NULL)  UNION ALL ";
+                           qr+="SELECT yearmonth,quarter FROM "+table+" WHERE ("+table+".level3='"+level3+"' && ("+table+".level4 IS NULL OR "+table+".level4=''))  UNION ALL ";
                            counter++;
                          where_cum+=" (Indicator='"+level3+"') OR ";
                        }   
@@ -867,29 +868,29 @@ String level4 = indicators.get(i).toString().split(",")[2];
           String sele="",ym="";
           
          if(iscum==1) {
-              if(level4!=null && !level4.equals("null")){
+              if(level4!=null && !level4.equals("null") && !level4.equals("")){
           sele = "SELECT COUNT(id) as occur,yearmonth,quarter  FROM "+table+" WHERE level3='"+level3+"' AND level4='"+level4+"' AND "+cum_yearmonth+"  group by yearmonth ORDER BY occur DESC ,yearmonth DESC LIMIT 1";      
               }
               else{
-              sele = "SELECT COUNT(id) as occur,yearmonth,quarter  FROM "+table+" WHERE level3='"+level3+"' AND level4 IS NULL AND "+cum_yearmonth+" group by yearmonth ORDER BY occur DESC ,yearmonth DESC LIMIT 1";      
+              sele = "SELECT COUNT(id) as occur,yearmonth,quarter  FROM "+table+" WHERE level3='"+level3+"' AND (level4 IS NULL OR level4='') AND "+cum_yearmonth+" group by yearmonth ORDER BY occur DESC ,yearmonth DESC LIMIT 1";      
           
               }
               }
          else{  
-      if(level4!=null && !level4.equals("null")){
+      if(level4!=null && !level4.equals("null") && !level4.equals("")){
     sele = "SELECT COUNT(id) as occur,yearmonth,quarter  FROM "+table+" WHERE level3='"+level3+"' AND level4='"+level4+"'  group by yearmonth ORDER BY occur DESC ,yearmonth DESC LIMIT 1";  
       }
       
       else{
-      sele = "SELECT COUNT(id) as occur,yearmonth,quarter  FROM "+table+" WHERE level3='"+level3+"' AND level4 IS NULL  group by yearmonth ORDER BY occur DESC ,yearmonth DESC LIMIT 1";      
+      sele = "SELECT COUNT(id) as occur,yearmonth,quarter  FROM "+table+" WHERE level3='"+level3+"' AND (level4 IS NULL OR level4='')  group by yearmonth ORDER BY occur DESC ,yearmonth DESC LIMIT 1";      
       }
          }
-             
+        System.out.println("max yearmonth query : "+sele);       
     conn.rs2 = conn.st2.executeQuery(sele);
     if(conn.rs2.next()){
         ym = conn.rs2.getString(2);
     }
-   
+        System.out.println(level3+":"+ym);
     
     return ym;
   }
