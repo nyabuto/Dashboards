@@ -71,17 +71,17 @@ int status,level,code;
         session.setAttribute("timestamp", timestamp);
         session.setAttribute("gender", gender);
         if(level == 1){
-         nextPage =   "Dashboard.jsp"; 
+         nextPage =   "ExcelReport.jsp"; 
         }
         else{
-        nextPage =  "Dashboard.jsp";    
+        nextPage =  "ExcelReport.jsp";    
         }
         
        }
        else{
            code = 0;
            message = "login failed. Wrong email and password combination.";
-           nextPage = "/SupplyChain";
+           nextPage = "/Dashboards";
            session.setAttribute("message", message);
        }
         

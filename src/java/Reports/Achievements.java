@@ -34,10 +34,13 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTable;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableColumn;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableColumns;
+import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTWorksheet;
 /**
  *
  * @author GNyabuto
@@ -119,16 +122,16 @@ String period,semi,quarter,month;
             System.out.println("start yearmonth : "+startyearmonth+" end year month : "+endyearmonth);
 
         cum_indicators.clear();   
-         String allpath = getServletContext().getRealPath("/achievements_1.xlsm");
+         String allpath = getServletContext().getRealPath("/achievements_1.xlsx");
          String mydrive = allpath.substring(0, 1);
          
           Date da= new Date();
             String dat2 = da.toString().replace(" ", "_");
              dat2 = dat2.toString().replace(":", "_");
 
-          String np=mydrive+":\\HSDSA\\Dashboards\\Achievements_"+dat2+".xlsm";
+          String np=mydrive+":\\HSDSA\\Dashboards\\Achievements_"+dat2+".xlsx";
             System.out.println("path:: "+np);
-              String sr = getServletContext().getRealPath("/achievements_1.xlsm");
+              String sr = getServletContext().getRealPath("/achievements_1.xlsx");
               
                   File f = new File(np);
     if(!f.exists()&& !f.isDirectory() ) { /* do something */
@@ -157,7 +160,7 @@ String period,semi,quarter,month;
     pathtodelete=filepth;
    XSSFWorkbook wb1 = new XSSFWorkbook(pkg);
 
-    SXSSFWorkbook wb = new SXSSFWorkbook(wb1, 100); 
+    SXSSFWorkbook wb = new SXSSFWorkbook(wb1, 1000,true); 
     
     Sheet shet= wb.getSheet("raw data");
     Sheet shetachievements= wb.createSheet("Quarterly Achievements");
@@ -464,13 +467,28 @@ String period,semi,quarter,month;
           ResultSetMetaData metaData = conn.rs.getMetaData();
        int col_count = metaData.getColumnCount(); //number of column
        
-         int row_num=1;
+         int row_num=2;
          
         while(conn.rs.next()){
-          Row row=shet.createRow(row_num);
+          Row row=null;
+          if(shet.getRow(row_num)!=null){
+          row=shet.getRow(row_num);
+          }
+          else
+          {
+           row=shet.createRow(row_num);
+          }
           for(int i=1;i<col_count;i++){
               String value=conn.rs.getString(i+1);
-               Cell cell= row.createCell(i-1);
+               Cell cell= null;
+               
+               if(row.getCell(i-1)!=null){
+               cell=row.getCell(i-1);
+               }
+               else{cell= row.createCell(i-1);}
+                
+               
+               
                if(isNumeric(value)){
                cell.setCellValue(Double.parseDouble(value));
                }
@@ -499,8 +517,42 @@ System.out.println("row number : "+row_num);
           row_num++;
          }
         // end of raw data output
+        XSSFSheet shet1= wb.getXSSFWorkbook().getSheet("raw data");
+        if(1==1){
+    
+        // tell your xssfsheet where its content begins and where it ends
+((XSSFSheet)shet1).getCTWorksheet().getDimension().setRef("A1:BY" + (shet.getLastRowNum() + 1));
+
+CTTable ctTable = ((XSSFSheet)shet1).getTables().get(0).getCTTable();
+
+ctTable.setRef("A1:BY" + (shet.getLastRowNum() + 1)); // adjust reference as needed
+
+//ctTable.unsetSortState(); // if you had sorted the data in Excel before reading the file,
+                          // you may want an unsorted table in your output file
+
+//CTTableColumns ctColumns = ctTable.getTableColumns(); // setting new table columns will
+                                                      // muck everything up, 
+                                                      // so adjust the existing ones
+
+// remove the old columns first if you plan on expanding your table in the column direction
+//for (int i = 0; i < ctColumns.getCount(); i++) {
+//    ctColumns.removeTableColumn(0);
+//}
+
+// throw in your new columns
+//for (int i = 0; i < tableHeaders.size(); i++) {
+//    CTTableColumn column = ctColumns.addNewTableColumn();
+//    column.setName(tableHeaders.get(i));
+//    column.setId(i + 1);
+//}
+
+// for some reason this isn't being take care of when columns are modified,
+// so fix the column count manually
+//ctColumns.setCount(tableHeaders.size());
         
-        
+        }
+        //remove the second row
+        //shet1.removeRow(shet1.getRow(1));
         
          // county quarterly achievements
          Row row = shetachievements.createRow(0);
@@ -789,7 +841,7 @@ shetachievements = (Sheet) obj.get("sheet");
         response.setContentType("application/ms-excel");
         response.setContentLength(outArray.length);
         response.setHeader("Expires:", "0"); // eliminates browser caching
-        response.setHeader("Content-Disposition", "attachment; filename=Achievements_Report_for_"+startyearmonth+"_to_"+endyearmonth+".xlsm");
+        response.setHeader("Content-Disposition", "attachment; filename=Achievements_Report_for_"+startyearmonth+"_to_"+endyearmonth+".xlsx");
         OutputStream outStream = response.getOutputStream();
         outStream.write(outArray);
         outStream.flush();
