@@ -6,6 +6,8 @@
 
 package Db;
 
+import static Db.OSValidator.isUnix;
+import static Db.OSValidator.isWindows;
 import com.mysql.jdbc.CallableStatement;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -125,7 +127,18 @@ public  Connection conn = null;
 
 
 
-            String dbconnpath = drive + ":/HSDSA/Dashboards/DO_NOT_DELETE/_/_/./dbconnection.txt";
+            String dbconnpath = drive + ":/HSDSA/Dashboards/DO_NOT_DELETE/_/_/dbconnection.txt";
+            
+            if (isWindows())   {
+	dbconnpath = drive + ":/HSDSA/Dashboards/DO_NOT_DELETE/_/_/dbconnection.txt";
+
+		               }
+            else if (isUnix()) {
+                
+	dbconnpath = "HSDSA/Dashboards/DO_NOT_DELETE/_/_/dbconnection.txt";
+
+		               }
+            
 
             //File file = new File("");
             // InputStream inStream = getClass().getResourceAsStream("Web-INF/classes/dbconnection.txt");  
@@ -167,7 +180,7 @@ public  Connection conn = null;
             System.out.println("MY VALUE:" + issetdbcalled_file_exists);
 
 
-            System.out.println("ERROR:      FILE NOT FOUND");
+            System.out.println("ERROR:FILE NOT FOUND");
             worked = false;
 
         }

@@ -5,6 +5,7 @@
  */
 package Reports;
 
+import static Db.OSValidator.isUnix;
 import Db.dbConn;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -130,6 +131,15 @@ String period,semi,quarter,month;
              dat2 = dat2.toString().replace(":", "_");
 
           String np=mydrive+":\\HSDSA\\Dashboards\\Achievements_"+dat2+".xlsx";
+          
+          
+           if (isUnix()) {
+            
+            np="/HSDSA/Dashboards/Achievements_"+dat2+".xlsx";
+           
+           
+                             }
+          
             System.out.println("path:: "+np);
               String sr = getServletContext().getRealPath("/achievements_1.xlsx");
               

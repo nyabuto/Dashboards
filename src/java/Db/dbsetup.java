@@ -5,6 +5,8 @@
  */
 package Db;
 
+import static Db.OSValidator.isUnix;
+import static Db.OSValidator.isWindows;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -51,8 +53,19 @@ String dbconnpath,dbsetup,status,nextpage;
        String allpath = getServletContext().getRealPath("/dbase.txt");
         String mydrive = allpath.substring(0, 1);
         //dbconnpath=mydrive+":\\MNHC_SYSTEM_APHIA_PLUS\\"; 
-      dbconnpath=mydrive+":\\HSDSA\\Dashboards\\DO_NOT_DELETE\\_\\_\\."; 
+      dbconnpath=mydrive+":\\HSDSA\\Dashboards\\DO_NOT_DELETE\\_\\_"; 
        
+      if (isWindows()) {
+             dbconnpath=mydrive+":\\HSDSA\\Dashboards\\DO_NOT_DELETE\\_\\_";
+            dbsetup = dbconnpath + "\\dbconnection.txt";
+            
+        } else if (isUnix()) {
+            
+            dbconnpath="HSDSA/Dashboards/DO_NOT_DELETE/_/_";
+            dbsetup = dbconnpath + "/dbconnection.txt";
+           
+                             }
+      
       //create a directory
       
       // new File(dbconnpath).mkdir();
@@ -61,7 +74,7 @@ String dbconnpath,dbsetup,status,nextpage;
         
         
 
-    dbsetup =dbconnpath+"\\dbconnection.txt";
+   // dbsetup =dbconnpath+"\\dbconnection.txt";
         
     //dbsetup=ctx.getRealPath("/dbase.txt");
         
@@ -195,6 +208,13 @@ File file = new File(dbsetup);
           String  mydrive = location.getFile().substring(1, 2);
           
             String command=mydrive+":/wamp/bin/mysql/mysql5.1.36/bin mysql -u root -p"+password+" dashboards  FILE.sql";
+            
+            if (isUnix()) {
+           command="/var/lib/mysql mysql -u root -p"+password+" dashboards  FILE.sql";
+           
+                             }
+            
+            
             Runtime.getRuntime().exec(command);
         } catch (IOException ex) {
             Logger.getLogger(dbsetup.class.getName()).log(Level.SEVERE, null, ex);
