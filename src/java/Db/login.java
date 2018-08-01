@@ -45,7 +45,7 @@ int status,level,code;
        //end of password encryption
        
        
-       String login = "SELECT id,fullname,email,phone,level,status,timestamp,gender FROM user WHERE email=? and password=?";
+       String login = "SELECT userid,CONCAT(fname,' ',mname,' ',lname) AS fullname,username AS email,'' AS phone,level,1 AS status,'' AS timestamp,'' AS gender FROM internal_system.user WHERE username=? and password=?";
        conn.pst = conn.conn.prepareStatement(login);
        conn.pst.setString(1, email);
        conn.pst.setString(2, password);

@@ -49,7 +49,7 @@
                        
                         <div class="form-group">
                             <label>Username</label>
-                            <input type="text" name="email" id="email" class="form-control" placeholder="Email">
+                            <input type="text" name="email" id="email" class="form-control" placeholder="Username">
                         </div>
                         <div class="form-group">
                             <label>Password</label>
