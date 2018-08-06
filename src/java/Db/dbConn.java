@@ -135,7 +135,7 @@ public  Connection conn = null;
 		               }
             else if (isUnix()) {
                 
-	dbconnpath = "HSDSA/Dashboards/DO_NOT_DELETE/_/_/dbconnection.txt";
+	dbconnpath = "/HSDSA/Dashboards/DO_NOT_DELETE/_/_/dbconnection.txt";
 
 		               }
             

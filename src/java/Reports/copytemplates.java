@@ -4,6 +4,7 @@
  */
 package Reports;
 
+import static Db.OSValidator.isUnix;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -39,8 +40,15 @@ public class copytemplates extends HttpServlet {
                             
     String sourcepath = getServletContext().getRealPath("/achievements.xlsm");
         String mydrive = sourcepath.substring(0, 1);
-      dbconnpath=mydrive+":\\HSDSA\\Dashboards\\"; 
-       
+      dbconnpath=mydrive+":\\HSDSA\\Dashboards"; 
+      String destpath=dbconnpath+"\\achievements.xlsm"; 
+      if (isUnix()) {
+      
+       dbconnpath="/HSDSA/Dashboards/";   
+       destpath=dbconnpath+"achievements.xlsm";    
+          
+      }
+      
       //create a directory
       
       // new File(dbconnpath).mkdir();
@@ -48,7 +56,7 @@ public class copytemplates extends HttpServlet {
         
         
         
-String destpath=dbconnpath+"\\achievements.xlsm";
+
 
     
         
@@ -145,6 +153,14 @@ public void transfermacros(String src1,String desteepath ){
                   //dbconnpath=mydrive+":\\MNHC_SYSTEM_APHIA_PLUS\\"; 
                 dbconnpath=mydrive+":\\HSDSA\\Dashboards\\"; 
                  
+                 if (isUnix()) {
+      
+       dbconnpath="/HSDSA/Dashboards/";   
+      
+          
+      }
+                
+                
                 //create a directory
                 // new File(dbconnpath).mkdir();
                new File(dbconnpath).mkdirs();
