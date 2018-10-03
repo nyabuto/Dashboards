@@ -36,6 +36,18 @@
         <servlet-name>load_months</servlet-name>
         <servlet-class>Loaders.load_months</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>alldata</servlet-name>
+        <servlet-class>powerbi.alldata</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>alldata1</servlet-name>
+        <servlet-class>powerbi.alldata1</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>pbioutput</servlet-name>
+        <servlet-class>powerbi.pbioutput</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>dbsetup</servlet-name>
         <url-pattern>/dbsetup</url-pattern>
@@ -71,6 +83,18 @@
     <servlet-mapping>
         <servlet-name>load_months</servlet-name>
         <url-pattern>/load_months</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>alldata</servlet-name>
+        <url-pattern>/alldata</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>alldata1</servlet-name>
+        <url-pattern>/alldata1</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>pbioutput</servlet-name>
+        <url-pattern>/pbioutput</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
