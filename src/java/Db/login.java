@@ -6,7 +6,6 @@
 package Db;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -76,13 +75,48 @@ int status,level,code;
         else{
         nextPage =  "ExcelReport.jsp";    
         }
+       }
+       else{
+          //check on internal database 
+         
+          String check_on_local = "SELECT id AS userid,fullname,email AS email,phone AS phone,level,status,'' AS timestamp,gender FROM user WHERE email=? and password=?";
+          conn.pst = conn.conn.prepareStatement(check_on_local);
+       conn.pst.setString(1, email);
+       conn.pst.setString(2, password);
+       
+       conn.rs = conn.pst.executeQuery();
+       if(conn.rs.next()){
+        id = conn.rs.getString(1);
+        fullname = conn.rs.getString(2);
+        email = conn.rs.getString(3);
+        phone = conn.rs.getString(4);
+        level = conn.rs.getInt(5);
+        status = conn.rs.getInt(6);
+        timestamp = conn.rs.getString(7);
+        gender = conn.rs.getString(8);
         
+        
+        session.setAttribute("id", id);
+        session.setAttribute("fullname", fullname);
+        session.setAttribute("email", email);
+        session.setAttribute("phone", phone);
+        session.setAttribute("level", level);
+        session.setAttribute("status", status);
+        session.setAttribute("timestamp", timestamp);
+        session.setAttribute("gender", gender);
+        if(level == 1){
+         nextPage =   "ExcelReport.jsp"; 
+        }
+        else{
+        nextPage =  "ExcelReport.jsp";    
+        }
        }
        else{
            code = 0;
-           message = "login failed. Wrong email and password combination.";
+           message = "Error. Wrong Email and Password Combination";
            nextPage = "/Dashboards";
-           session.setAttribute("message", message);
+           session.setAttribute("message", message);       
+       }
        }
         
         response.sendRedirect(nextPage);

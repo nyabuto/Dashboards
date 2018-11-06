@@ -39,9 +39,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.simple.JSONObject;
 import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTable;
-import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableColumn;
-import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTTableColumns;
-import org.openxmlformats.schemas.spreadsheetml.x2006.main.CTWorksheet;
 /**
  *
  * @author GNyabuto
@@ -58,7 +55,9 @@ String targetsquery="",indicator;
 int targetscounter=0;
 String pathtodelete=null;
 String period,semi,quarter,month;
-    ArrayList cum_indicators = new ArrayList();
+ArrayList cum_indicators = new ArrayList();
+String county,sub_county,facility,where_location;
+int has_data=0;
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException, InvalidFormatException {
         response.setContentType("text/html;charset=UTF-8");
@@ -69,7 +68,8 @@ String period,semi,quarter,month;
 
             year = request.getParameter("year");
             period = request.getParameter("period");
-
+            where_location = "";
+            
             switch (period) {
                 case "1":
                     year = request.getParameter("year");
@@ -120,6 +120,101 @@ String period,semi,quarter,month;
                     break;
             }
             
+            
+        county = request.getParameter("county");
+        sub_county = request.getParameter("district");
+        facility = request.getParameter("facility");
+        
+       
+
+                if(county==null || county.equals("")){
+                where_location=" 1=1 ";    
+                }
+            
+        else if(!(facility==null || facility.equals(""))){
+         String[] facility_data = request.getParameterValues("facility");   
+            where_location = " (";
+           has_data=0;
+           for(String fac:facility_data){
+            if(fac!=null && !fac.equals("")){
+             where_location+=" facilities.SubpartnerID='"+fac+"' OR ";
+             has_data++;
+            }  
+           }
+           
+           if(has_data>0){
+           where_location = removeLast(where_location, 3);
+           where_location+=")";
+           }
+           else{   
+           } 
+              
+        }
+        else if(!(sub_county==null || sub_county.equals(""))){
+            String[] sub_county_data = request.getParameterValues("district");
+               where_location = " (";
+           has_data=0;
+           for(String sct:sub_county_data){
+            if(sct!=null && !sct.equals("")){
+             where_location+=" district.DistrictID='"+sct+"' OR ";
+             has_data++;
+            }  
+           }
+           
+           if(has_data>0){
+           where_location = removeLast(where_location, 3);
+           where_location+=")";
+           }
+           else{  
+           } 
+                System.out.println(has_data+" where : "+where_location);    
+              // where = " WHERE district.DistrictID='"+sub_county+"' ";    
+            }
+                
+                      
+            else if(!(county==null || county.equals(""))){
+                   String[] county_data = request.getParameterValues("county"); 
+                   where_location = " (";
+                    has_data=0;
+                    System.out.println("counties : "+county_data.length);
+                    for(String ct:county_data){
+                     if(ct!=null && !ct.equals("")){
+                         
+                      where_location+=" county.CountyID='"+ct+"' OR ";
+                      has_data++;
+                     }  
+                    }
+
+                    if(has_data>0){
+                    where_location = removeLast(where_location, 3);
+                    where_location+=")";
+                    }
+                    else{  
+                    }
+                   
+                }
+          
+        if(!where_location.contains("1=1")){
+        String all_loc_ids = where_location;
+        where_location="(";
+         //get mfls
+        String getmfl = "SELECT CentreSanteId FROM facilities LEFT JOIN district on facilities.DistrictID = district.DistrictID LEFT JOIN county ON county.CountyID=district.CountyID"
+            + " WHERE "+all_loc_ids+" AND facilities.active=1";
+            System.out.println("getmfl : "+getmfl);
+        conn.rs = conn.st.executeQuery(getmfl);
+        while(conn.rs.next()){
+        where_location+=" mflcode="+conn.rs.getString(1)+" OR ";
+        }
+        
+        where_location = removeLast(where_location, 3);
+        where_location+=")";  
+        }
+        else{
+            
+        }
+            System.out.println("where location : "+where_location);
+            
+        
             System.out.println("start yearmonth : "+startyearmonth+" end year month : "+endyearmonth);
 
         cum_indicators.clear();   
@@ -419,35 +514,37 @@ String period,semi,quarter,month;
             System.out.println("target : "+targetsquery);
           if(table1_elems>0) {
               query_where1 = removeLastChars(query_where1,3);
-              query+=" SELECT * FROM table1 WHERE ("+query_where1+") AND yearmonth BETWEEN "+startyearmonth+" AND "+endyearmonth+"  UNION ALL "; 
+              query+=" SELECT * FROM table1 WHERE ("+query_where1+") AND "+where_location+" AND yearmonth BETWEEN "+startyearmonth+" AND "+endyearmonth+"  UNION ALL "; 
           }
          if(table2_elems>0) {
              query_where2 = removeLastChars(query_where2,3);
-              query+=" SELECT * FROM table2 WHERE ("+query_where2+") AND yearmonth BETWEEN "+startyearmonth+" AND "+endyearmonth+"  UNION ALL ";
+              query+=" SELECT * FROM table2 WHERE ("+query_where2+") AND  "+where_location+" AND yearmonth BETWEEN "+startyearmonth+" AND "+endyearmonth+"  UNION ALL ";
          }
          if(table3_elems>0) {
              query_where3 = removeLastChars(query_where3,3);
-              query+=" SELECT * FROM table3 WHERE ("+query_where3+") AND yearmonth BETWEEN "+startyearmonth+" AND "+endyearmonth+"  UNION ALL ";
+              query+=" SELECT * FROM table3 WHERE ("+query_where3+") AND "+where_location+" AND yearmonth BETWEEN "+startyearmonth+" AND "+endyearmonth+"  UNION ALL ";
          }
          
           if(cum_table1_elems>0) {
               cum_query_where1 = removeLastChars(cum_query_where1,3); 
-              cum_query+=" SELECT * FROM table1 WHERE ("+cum_query_where1+") AND "+max_yearmn_cum+" UNION ALL "; 
+              cum_query+=" SELECT * FROM table1 WHERE ("+cum_query_where1+") AND  "+where_location+" AND "+max_yearmn_cum+" UNION ALL "; 
               
-              county_cum_query+=" SELECT * FROM table1 WHERE ("+cum_query_where1+") UNION ALL "; 
+              county_cum_query+=" SELECT * FROM table1 WHERE ("+cum_query_where1+"  AND "+where_location+" UNION ALL "; 
           }
          if(cum_table2_elems>0) {
              cum_query_where2 = removeLastChars(cum_query_where2,3);
-              cum_query+=" SELECT * FROM table2 WHERE ("+cum_query_where2+") AND "+max_yearmn_cum+" UNION ALL ";
+              cum_query+=" SELECT * FROM table2 WHERE ("+cum_query_where2+")  "+where_location+" AND "+max_yearmn_cum+" UNION ALL ";
               
-              county_cum_query+=" SELECT * FROM table2 WHERE ("+cum_query_where2+")UNION ALL ";
+              county_cum_query+=" SELECT * FROM table2 WHERE ("+cum_query_where2+"  AND "+where_location+" UNION ALL ";
          }
          if(cum_table3_elems>0) {
              cum_query_where3 = removeLastChars(cum_query_where3,3);
-              cum_query+=" SELECT * FROM table3 WHERE ("+cum_query_where3+") AND "+max_yearmn_cum+" UNION ALL ";
+              cum_query+=" SELECT * FROM table3 WHERE ("+cum_query_where3+") AND  "+where_location+" AND "+max_yearmn_cum+" UNION ALL ";
               
-              county_cum_query+=" SELECT * FROM table3 WHERE ("+cum_query_where3+")UNION ALL ";
+              county_cum_query+=" SELECT * FROM table3 WHERE ("+cum_query_where3+"  AND "+where_location+" UNION ALL ";
          }
+         
+            System.out.println("Where for location:"+where_location); 
          
          query = removeLastChars(query,11);
          cum_query = removeLastChars(cum_query,11);
@@ -1119,4 +1216,11 @@ shetachievements = (Sheet) obj.get("sheet");
          }
          return obj;
      }
+     
+     public String removeLast(String str, int num) {
+    if (str != null && str.length() > 0) {
+        str = str.substring(0, str.length() - num);
+    }
+    return str;
+    }
 }

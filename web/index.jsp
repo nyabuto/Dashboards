@@ -48,8 +48,8 @@
                     <form action="login" method="post">
                        
                         <div class="form-group">
-                            <label>Username</label>
-                            <input type="text" name="email" id="email" class="form-control" placeholder="Username">
+                            <label>Username/Email</label>
+                            <input type="text" name="email" id="email" class="form-control" placeholder="Username/Email">
                         </div>
                         <div class="form-group">
                             <label>Password</label>
@@ -59,8 +59,22 @@
                         <button type="submit" class="btn btn-success btn-flat m-b-30 m-t-30">Login</button>
                         
                     </form>
+              <div class="col-md-12" style="font-size: 100%; font-weight: bolder; color: red; margin-top: 20px;">  
+               <%
+                     if (session.getAttribute("message")!= null)  { 
+                        out.print(session.getAttribute("message").toString());
+                        //session.removeAttribute("message");
+                    }
+
+               %>  
+                      </div>
+                    
                 </div>
+                <div style="text-align: center; color: black; font-size:25px; margin-top: 10px; font-weight: 600;">    
+         <a href="register.jsp">Are you new? Click Here to Register</a>
+        </div>
             </div>
+                      
         </div>
     </div>
 

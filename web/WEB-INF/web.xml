@@ -48,6 +48,30 @@
         <servlet-name>pbioutput</servlet-name>
         <servlet-class>powerbi.pbioutput</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>save_user</servlet-name>
+        <servlet-class>Dashboards.save_user</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>load_counties</servlet-name>
+        <servlet-class>Loaders.load_counties</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>load_district</servlet-name>
+        <servlet-class>Loaders.load_district</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>load_facilities</servlet-name>
+        <servlet-class>Loaders.load_facilities</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>load_users</servlet-name>
+        <servlet-class>Dashboards.load_users</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>check_user</servlet-name>
+        <servlet-class>Dashboards.check_user</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>dbsetup</servlet-name>
         <url-pattern>/dbsetup</url-pattern>
@@ -95,6 +119,30 @@
     <servlet-mapping>
         <servlet-name>pbioutput</servlet-name>
         <url-pattern>/pbioutput</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>save_user</servlet-name>
+        <url-pattern>/save_user</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>load_counties</servlet-name>
+        <url-pattern>/load_counties</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>load_district</servlet-name>
+        <url-pattern>/load_district</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>load_facilities</servlet-name>
+        <url-pattern>/load_facilities</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>load_users</servlet-name>
+        <url-pattern>/load_users</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>check_user</servlet-name>
+        <url-pattern>/check_user</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

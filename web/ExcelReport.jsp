@@ -67,7 +67,7 @@
                             <div class="col col-md-3"><label for="file-multiple-input" class=" form-control-label"><b>Choose Period</b><b style="color:red">*</b></label></div>
                             <div class="col-12 col-md-6">
                                 
-                                <select id="period" name="period"  data-placeholder="Choose Year..." class="standardSelect form-control" required="true" style="height: 15px;">
+                                <select id="period" name="period"  data-placeholder="Choose Year..." class="standardSelect form-control" required="true" >
                                     <option value ="">Choose Period</option>
                                     <option value ="1">Annual</option>
                                     <option value ="2">Semi - Annual</option>
@@ -81,7 +81,7 @@
                             <div class="col col-md-3"><label for="file-multiple-input" class=" form-control-label"><b>Select Year</b><b style="color:red">*</b></label></div>
                             <div class="col-12 col-md-6">
                                 
-                                <select id="year" name="year"  data-placeholder="Choose Year..." required class="standardSelect form-control" style="height: 15px;">
+                                <select id="year" name="year"  data-placeholder="Choose Year..." required class="standardSelect form-control" >
                                     <option value =""> Choose Reporting Year</option>
                                     </select>
                             </div>
@@ -91,7 +91,7 @@
                             <div class="col col-md-3"><label for="file-multiple-input" class=" form-control-label"><b>Select Semi Annual</b><b style="color:red">*</b></label></div>
                             <div class="col-12 col-md-6">
                                 
-                                <select id="semi_annual" name="semi_annual"  data-placeholder="Choose semi annual..." class="standardSelect form-control" style="height: 15px;">
+                                <select id="semi_annual" name="semi_annual"  data-placeholder="Choose semi annual..." class="standardSelect form-control" >
                                     <option value =""> Choose Reporting Semi Annual</option>
                                     </select>
                             </div>
@@ -101,7 +101,7 @@
                             <div class="col col-md-3"><label for="file-multiple-input" class=" form-control-label"><b>Select Quarter</b><b style="color:red">*</b></label></div>
                             <div class="col-12 col-md-6">
                                 
-                                <select id="quarter" name="quarter"  data-placeholder="Choose quarter..." class="standardSelect form-control" style="height: 15px;">
+                                <select id="quarter" name="quarter"  data-placeholder="Choose quarter..." class="standardSelect form-control" >
                                     <option value =""> Choose Reporting Quarter</option>
                                     </select>
                             </div>
@@ -111,12 +111,39 @@
                             <div class="col col-md-3"><label for="file-multiple-input" class=" form-control-label"><b>Select Month</b><b style="color:red">*</b></label></div>
                             <div class="col-12 col-md-6">
                                 
-                                <select id="month" name="month"  data-placeholder="Choose month..." class="standardSelect form-control" style="height: 15px;">
+                                <select id="month" name="month"  data-placeholder="Choose month..." class="standardSelect form-control" >
                                     <option value =""> Choose Reporting Month</option>
                                     </select>
                             </div>
                           </div>
                           
+                            <div class="row form-group">
+                            <div class="col col-md-3"><label for="file-multiple-input" class=" form-control-label"><b>Choose Counties [Optional]</b><b style="color:red"></b></label></div>
+                            <div class="col-12 col-md-6">
+                                
+                                <select id="county" name="county" multiple  data-placeholder="Choose County..." class="standardSelect form-control" >
+                                    <option value ="">Choose County</option>
+                                   </select>
+                            </div>
+                          </div>
+                            <div class="row form-group">
+                            <div class="col col-md-3"><label for="file-multiple-input" class=" form-control-label"><b>Choose Sub Counties [Optional]</b><b style="color:red"></b></label></div>
+                            <div class="col-12 col-md-6">
+                                
+                                <select id="district" name="district" multiple data-placeholder="Choose District..." class="standardSelect form-control" >
+                                    <option value ="">Choose Sub-Counties</option>
+                                   </select>
+                            </div>
+                          </div>
+                            <div class="row form-group">
+                            <div class="col col-md-3"><label for="file-multiple-input" class=" form-control-label"><b>Choose Facilities [Optional]</b><b style="color:red"></b></label></div>
+                            <div class="col-12 col-md-6">
+                                
+                                <select id="facility" name="facility" multiple data-placeholder="Choose Facilities..." class="standardSelect form-control" >
+                                    <option value ="">Choose Facilities</option>
+                                   </select>
+                            </div>
+                          </div>
                     
                       </div>
                         <div class="card-footer" style="text-align: right;">
@@ -194,21 +221,109 @@
             
             
             
-            
-            
-            jQuery(".standardSelect").chosen({
+            jQuery("#district").chosen("destroy");
+         jQuery("#district").chosen({
                 disable_search_threshold: 10,
-                no_results_text: "Oops, nothing found!",
+                no_results_text: "Oops, no such Sub County!",
+                    width: "100%"
+                });
+            
+        jQuery("#facility").chosen("destroy");
+         jQuery("#facility").chosen({
+                disable_search_threshold: 10,
+                no_results_text: "Oops, no such Health Facility!",
                 width: "100%"
             });
+        
+            
+//            jQuery(".standardSelect").chosen({
+//                disable_search_threshold: 10,
+//                no_results_text: "Oops, nothing found!",
+//                width: "100%"
+//            });
             
             
         });
     </script>
     
     <script>
+    function load_counties(){
+       jQuery.ajax({
+        url:'load_counties',
+        type:"post",
+        dataType:"html",
+        success:function(output){
+         
+         // ouput
+         jQuery("#county").html(output);
+         jQuery("#county").chosen("destroy");
+         jQuery("#county").chosen({
+                disable_search_threshold: 10,
+                no_results_text: "Oops, no such county!",
+                width: "100%"
+            });
+        }
+    });   
+
+   } 
+    function load_sub_counties(){
+        var county= jQuery("#county").val();
+     county = (""+county).split(",").join("_");
+       jQuery.ajax({
+        url:'load_district?counties='+county,
+        type:"post",
+        dataType:"html",
+        success:function(output){
+         
+         // ouput
+         jQuery("#district").html(output);
+         jQuery("#district").chosen("destroy");
+         jQuery("#district").chosen({
+                disable_search_threshold: 10,
+                no_results_text: "Oops, no such Sub County!",
+                width: "100%"
+            });
+        }
+    });   
+
+   } 
+   
+    function load_facilities(){
+  var district= jQuery("#district").val();
+     district = (""+district).split(",").join("_");
+       jQuery.ajax({
+        url:'load_facilities?districts='+district,
+        type:"post",
+        dataType:"html",
+        success:function(output){
+         
+         // ouput
+         jQuery("#facility").html(output);
+         jQuery("#facility").chosen("destroy");
+         jQuery("#facility").chosen({
+                disable_search_threshold: 10,
+                no_results_text: "Oops, no such Health Facility!",
+                width: "100%"
+            });
+        }
+    });   
+
+   } 
+    
+    
+    </script>
+    
+    <script>
         jQuery(document).ready(function() {
          load_years();
+         load_counties();
+         
+         jQuery("#county").change(function(){
+         load_sub_counties();    
+         });
+         jQuery("#district").change(function(){
+         load_facilities();    
+         });
         });
        function load_years(){
        jQuery.ajax({
@@ -225,12 +340,12 @@
          }
          // ouput
          jQuery("#year").html(output);
-         jQuery("#year").chosen("destroy");
-         jQuery("#year").chosen({
-                disable_search_threshold: 10,
-                no_results_text: "Oops, no year found!",
-                width: "100%"
-            });
+//         jQuery("#year").chosen("destroy");
+//         jQuery("#year").chosen({
+//                disable_search_threshold: 10,
+//                no_results_text: "Oops, no year found!",
+//                width: "100%"
+//            });
         }
   });   
         
@@ -251,12 +366,12 @@
          }
          // ouput
          jQuery("#semi_annual").html(output);
-         jQuery("#semi_annual").chosen("destroy");
-         jQuery("#semi_annual").chosen({
-                disable_search_threshold: 10,
-                no_results_text: "Oops, no semi-annual found!",
-                width: "100%"
-            });
+//         jQuery("#semi_annual").chosen("destroy");
+//         jQuery("#semi_annual").chosen({
+//                disable_search_threshold: 10,
+//                no_results_text: "Oops, no semi-annual found!",
+//                width: "100%"
+//            });
         }
   });   
         
@@ -277,12 +392,12 @@
          }
          // ouput
          jQuery("#quarter").html(output);
-         jQuery("#quarter").chosen("destroy");
-         jQuery("#quarter").chosen({
-                disable_search_threshold: 10,
-                no_results_text: "Oops, no semi-annual found!",
-                width: "100%"
-            });
+//         jQuery("#quarter").chosen("destroy");
+//         jQuery("#quarter").chosen({
+//                disable_search_threshold: 10,
+//                no_results_text: "Oops, no semi-annual found!",
+//                width: "100%"
+//            });
         }
   });   
         
@@ -303,12 +418,12 @@
          }
          // ouput
          jQuery("#month").html(output);
-         jQuery("#month").chosen("destroy");
-         jQuery("#month").chosen({
-                disable_search_threshold: 10,
-                no_results_text: "Oops, no month found!",
-                width: "100%"
-            });
+//         jQuery("#month").chosen("destroy");
+//         jQuery("#month").chosen({
+//                disable_search_threshold: 10,
+//                no_results_text: "Oops, no month found!",
+//                width: "100%"
+//            });
         }
   });   
   
