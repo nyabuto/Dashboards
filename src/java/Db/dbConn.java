@@ -124,9 +124,6 @@ public  Connection conn = null;
         boolean worked = true;
 
         try {
-
-
-
             String dbconnpath = drive + ":/HSDSA/Dashboards/DO_NOT_DELETE/_/_/dbconnection.txt";
             
             if (isWindows())   {

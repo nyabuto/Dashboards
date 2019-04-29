@@ -32,7 +32,7 @@ int pos;
           session = request.getSession();
             dbConn conn = new dbConn();
             
-            output="<table class=\"table\"><thead><tr><th>No.</th><th>Full Name</th><th>Email</th><th>Phone Number</th><th>Gender</th><th>Action</th></thead><tbody>";
+            output="<table class=\"table\"><thead><tr><th>No.</th><th>Full Name</th><th>Email</th><th>Phone Number</th><th>Action</th></thead><tbody>";
             pos=0;
             
             String get_users = "SELECT id,fullname,email,phone,gender FROM user WHERE status=0";
@@ -44,7 +44,7 @@ int pos;
                     + "<td>"+conn.rs.getString(2)+"</td>"
                     + "<td>"+conn.rs.getString(3)+"</td>"
                     + "<td>"+conn.rs.getString(4)+"</td>"
-                    + "<td>"+conn.rs.getString(5)+"</td>"
+//                    + "<td>"+conn.rs.getString(5)+"</td>"
                     + "<td><table><tr><td><button  onclick=\"return approve("+conn.rs.getString(1)+");\" class=\"btn btn-success\">Approve</button></td> <td><button onclick=\"return decline("+conn.rs.getString(1)+");\" class=\"btn btn-danger\">Decline</button></td></tr></table></td>"
                     + "</tr>";    
             }

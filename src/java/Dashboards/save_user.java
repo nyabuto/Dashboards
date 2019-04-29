@@ -42,7 +42,7 @@ public class save_user extends HttpServlet {
          password = request.getParameter("password");
          con_password = request.getParameter("con_password");
          
-         gender = request.getParameter("gender");
+         gender = "";
          
          if(phone.startsWith("7")){
              phone = "0"+phone;

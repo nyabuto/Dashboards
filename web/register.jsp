@@ -93,7 +93,7 @@
                                 <input type="password" name="con_password" id="con_password" placeholder=" Confirm your password"  maxlength="30" required="true" class="form-control-sm" style="width: 100%;">
                             </div>
                           </div>
-                          
+<!--                          
                           <div class="row form-group" id="month_grp">
                             <div class="col col-md-3"><label for="file-multiple-input" class=" form-control-label"><b>Gender</b><b style="color:red">*</b></label></div>
                             <div class="col-12 col-md-8">
@@ -103,7 +103,8 @@
                                     <option value ="M">Female</option>
                                     </select>
                             </div>
-                          </div>
+                          </div>-->
+
                      
                           <div class="card-footer" style="text-align: right;">
                          <button type="submit" class="btn btn-primary">

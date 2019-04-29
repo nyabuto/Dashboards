@@ -16,7 +16,6 @@
 
     <link rel="apple-touch-icon" href="images/logo.png">
     <link rel="shortcut icon" href="images/logo.png">
-
     <link rel="stylesheet" href="assets/css/normalize.css">
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/font-awesome.min.css">
